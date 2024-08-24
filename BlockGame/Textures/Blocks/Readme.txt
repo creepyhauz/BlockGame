@@ -1,0 +1,1 @@
+﻿Place textures "stone.png" and "dirt.png" here.
