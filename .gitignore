@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/BlockGame/Textures/Blocks/stone.png
+/BlockGame/Textures/Blocks/dirt.png
