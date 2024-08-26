@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /BlockGame/Textures/Blocks/stone.png
 /BlockGame/Textures/Blocks/dirt.png
+/BlockGame/Textures/Blocks/atlas.png
+/BlockGame/Textures/atlas.png
