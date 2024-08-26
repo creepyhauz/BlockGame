@@ -10,5 +10,6 @@ namespace BlockGame.Blocks
     {
         public static StoneBlock Stone = new StoneBlock();
         public static DirtBlock Dirt = new DirtBlock();
+        public static Grass Grass = new Grass();
     }
 }

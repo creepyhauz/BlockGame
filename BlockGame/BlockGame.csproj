@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="NLog" Version="5.3.3" />
     <PackageReference Include="OpenTK" Version="4.8.2" />
+    <PackageReference Include="SimplexNoise" Version="2.0.0" />
     <PackageReference Include="StbImageSharp" Version="2.27.14" />
   </ItemGroup>
 
@@ -20,10 +21,7 @@
     <None Update="Shaders\shader.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Textures\Blocks\dirt.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Textures\Blocks\stone.png">
+    <None Update="Textures\atlas.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 using StbImageSharp;
 
 namespace BlockGame
@@ -7,7 +8,21 @@ namespace BlockGame
     public class Texture
     {
         public readonly int Handle;
+        private Vector2i _size;
 
+        public Vector2i Size => _size;
+
+        private Vector2i TextureSize
+        {
+            get
+            {
+                Use(0);
+                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out int w);
+                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out int h);
+
+                return new Vector2i(w, h);
+            }
+        }
         public static Texture LoadFromFile(string path)
         {
             // Generate handle
@@ -72,6 +87,7 @@ namespace BlockGame
         public Texture(int glHandle)
         {
             Handle = glHandle;
+            _size = TextureSize;
         }
 
         // Activate texture

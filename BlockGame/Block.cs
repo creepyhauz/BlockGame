@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics;
+﻿using BlockGame.Blocks;
+using OpenTK.Mathematics;
 
 namespace BlockGame
 {
@@ -8,10 +9,11 @@ namespace BlockGame
         public string ID { get; set; }
         public Texture Texture { get; set; }
 
-        public Block(string id, Texture texture)
+        public Block(string id)
         {
             ID = id;
-            Texture = texture;
         }
+
+        public abstract FaceData GetFace(Faces face);
     }
 }

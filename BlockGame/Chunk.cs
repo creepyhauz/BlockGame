@@ -1,6 +1,7 @@
 ﻿using BlockGame.Blocks;
 using BlockGame.Buffers;
 using BlockGame.Shaders;
+using BlockGame.Textures;
 using BlockGame.VertexStructs;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -15,51 +16,40 @@ namespace BlockGame
     public class Chunk
     {
         public const int ChunkSize = 16;
-        public const int ChunkHeight = 16;
-
+        public const int ChunkHeight = 32;
+        public Vector2i ChunkPos = new Vector2i(0, 0);
 
         public static BlockRenderer BlockRenderer;
         public Block[,,] Blocks = new Block[ChunkSize, ChunkHeight, ChunkSize];
 
-        public Chunk()
+        public Chunk(Vector2i chunkPos)
         {
-            GenBlocks();
+            ChunkPos = chunkPos;
+            GenBlocks(GenChunkHeights());
             BuildChunk();
         }
 
-        public void GenBlocks()
+        public void GenBlocks(float[,] Heights)
         {
-            for (int y = 0; y < ChunkHeight; y++)
-                for (int z = 0; z < ChunkSize; z++)
-                    for (int x = 0; x < ChunkSize; x++)
+
+            for (int z = 0; z < ChunkSize; z++)
+                for (int x = 0; x < ChunkSize; x++)
+                    for (int y = 0; y < (Heights[x, z] / 10); y++)
                     {
-                        Blocks[x, y, z] = BlockGame.Blocks.Blocks.Dirt;
+                        if (y >= 15)
+                            Blocks[x, y, z] = BlockGame.Blocks.Blocks.Dirt;
+                        else
+                            Blocks[x, y, z] = BlockGame.Blocks.Blocks.Stone;
                     }
 
-            for (int z = 1; z < ChunkSize-1; z++)
-                for (int x = 1; x < ChunkSize-1; x++)
-                {
-                    Blocks[x, ChunkHeight-1, z] = null;
-                }
 
-            for (int z = 2; z < ChunkSize - 2; z++)
-                for (int x = 2; x < ChunkSize - 2; x++)
-                {
-                    Blocks[x, ChunkHeight - 2, z] = null;
-                }
-
-            for (int z = 4; z < ChunkSize - 4; z++)
-                for (int x = 4; x < ChunkSize - 4; x++)
-                {
-                    Blocks[x, ChunkHeight - 1, z] = BlockGame.Blocks.Blocks.Dirt;
-                }
-
-            for (int z = 3; z < ChunkSize - 3; z++)
-                for (int x = 3; x < ChunkSize - 3; x++)
-                {
-                    Blocks[x, ChunkHeight - 2, z] = BlockGame.Blocks.Blocks.Dirt;
-                }
-
+            for (int z = 0; z < ChunkSize; z++)
+                for (int x = 0; x < ChunkSize; x++)
+                    for (int y = 0; y < (Heights[x, z] / 10); y++)
+                    {
+                        if (Blocks[x, y, z] == BlockGame.Blocks.Blocks.Dirt && ( y+1> ChunkHeight || Blocks[x, y+1, z] == null))
+                            Blocks[x, y, z] = BlockGame.Blocks.Blocks.Grass;
+                    }
         }
 
         List<TexturedVertex> ChunkVertices = new List<TexturedVertex>();
@@ -67,6 +57,17 @@ namespace BlockGame
         public IBO IBO;
         public VBO<TexturedVertex> VBO;
         public VAO<TexturedVertex> VAO;
+
+        public float[,] GenChunkHeights()
+        {
+            float[,] Heights = new float[ChunkSize, ChunkSize];
+            for (int z = 0; z < ChunkSize; z++)
+                for (int x = 0; x < ChunkSize; x++)
+                    Heights[x, z] = SimplexNoise.Noise.CalcPixel2D((int)(ChunkPos.X * ChunkSize + x), (int)(ChunkPos.Y * ChunkSize + z), 0.01f);
+
+            return Heights;
+        }
+
         public void BuildChunk()
         {
             for (int y = 0; y < ChunkHeight; y++)
@@ -98,9 +99,7 @@ namespace BlockGame
 
                         foreach (var face in OpenFaces)
                         {
-                            ChunkVertices.AddRange(FaceDataRaw.RawVertices[face].Select(v => new TexturedVertex(v.Position + new Vector3(x, y, z), v.UV)));
-                            ChunkIndices.Add(new Vector3i(ChunkVertices.Count - 4, ChunkVertices.Count - 3, ChunkVertices.Count - 2));
-                            ChunkIndices.Add(new Vector3i(ChunkVertices.Count - 2, ChunkVertices.Count - 1, ChunkVertices.Count - 4));
+                            AddFace(Blocks[x, y, z], face, new Vector3(x, y, z));
                         }
                     }
 
@@ -109,9 +108,17 @@ namespace BlockGame
             IBO = new IBO(ChunkIndices);
         }
 
+        public void AddFace(Block block, Faces face, Vector3 Pos)
+        {
+            Vector2i CHUNK_POS = (ChunkPos * ChunkSize);
+            ChunkVertices.AddRange(block.GetFace(face).vertices.Select(v => new TexturedVertex(v.Position + Pos + new Vector3(CHUNK_POS.X, 0, CHUNK_POS.Y), v.UV)));
+            ChunkIndices.Add(new Vector3i(ChunkVertices.Count - 4, ChunkVertices.Count - 3, ChunkVertices.Count - 2));
+            ChunkIndices.Add(new Vector3i(ChunkVertices.Count - 2, ChunkVertices.Count - 1, ChunkVertices.Count - 4));
+        }
+
         public void Render(Shader shader, Camera camera)
         {
-            BlockGame.Blocks.Blocks.Dirt.Texture.Use(0);
+            TextureAtlas.Atlas.Use(0);
             shader.SetMatrix4("aTransform", camera.CameraTransform);
             VAO.Bind();
             IBO.Bind();

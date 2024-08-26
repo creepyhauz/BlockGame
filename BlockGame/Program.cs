@@ -1,5 +1,6 @@
 ﻿using BlockGame.Buffers;
 using BlockGame.Shaders;
+using BlockGame.Textures;
 using BlockGame.VertexStructs;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -23,11 +24,9 @@ namespace BlockGame
 
         Shader Shader;
 
-        Chunk Chunk;
-
         public Program()
         {
-            GameWindow = new GameWindow(new GameWindowSettings(), new NativeWindowSettings() { WindowState=WindowState.Maximized});
+            GameWindow = new GameWindow(new GameWindowSettings(), new NativeWindowSettings() { WindowState = WindowState.Maximized });
             GameWindow.UpdateFrequency = 60;
             GameWindow.UpdateFrame += Game_UpdateFrame;
             GameWindow.RenderFrame += Game_RenderFrame;
@@ -43,14 +42,24 @@ namespace BlockGame
             Camera.UpdateInput(GameWindow.KeyboardState, GameWindow.MouseState, args);
         }
 
+        World world;
         private void Game_Load()
         {
             Shader = new Shader("Shaders/Shader.vert", "Shaders/Shader.frag", ActionContex);
+
+            TextureAtlas.Generate(new Vector2i(128, 128));
+
             Chunk.BlockRenderer = new BlockRenderer();
-            Chunk = new Chunk();
+
             GameWindow.CursorState = CursorState.Grabbed;
 
+
+            world = new World();
+
             GL.Enable(EnableCap.DepthTest);
+            GL.FrontFace(FrontFaceDirection.Cw);
+            GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Back);
         }
         Matrix4 DrawTransform;
         float i = 0;
@@ -61,7 +70,7 @@ namespace BlockGame
 
             Shader.Use();
 
-            Chunk.Render(Shader, Camera);
+            world.Render(Shader, Camera);
 
             GameWindow.SwapBuffers();
         }
