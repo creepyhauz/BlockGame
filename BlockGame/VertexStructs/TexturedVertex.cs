@@ -11,6 +11,7 @@ namespace BlockGame.VertexStructs
     {
         public Vector3 Position;
         public Vector2 UV;
+        public Vector3 ColorMult = new Vector3(1, 1, 1);
         public TexturedVertex(Vector3 position, Vector2 UV)
         {
             Position = position;
@@ -23,12 +24,20 @@ namespace BlockGame.VertexStructs
             this.UV = (Vector2)UV;
         }
 
+        public TexturedVertex SetColorM(Vector3 mult)
+        {
+            TexturedVertex vertex = this;
+            vertex.ColorMult = mult;
+            return vertex;
+        }
+
         public static Type VertexType => typeof(TexturedVertex);
         public static int VertexByteSize => VertexAttributes.Sum(a => a.ComponentCount * a.Size);
         public static VertexAttribute[] VertexAttributes => 
             [
                 new VertexAttribute("Position", 0, sizeof(float), 3, 0, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float),
-                new VertexAttribute("UV", 1, sizeof(float), 2, sizeof(float) * 3, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float)
+                new VertexAttribute("UV", 1, sizeof(float), 2, sizeof(float) * 3, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float),
+                new VertexAttribute("ColorMult", 2, sizeof(float), 3, sizeof(float) * 5, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float)
             ];
     }
 }

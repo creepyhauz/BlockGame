@@ -14,15 +14,15 @@ namespace BlockGame
         public const int WorldSize = 16;
 
         public Chunk[,] chunks = new Chunk[WorldSize, WorldSize];
-        
+
 
         public World()
         {
-            for (int z = 0; z < WorldSize; z++)
+            for (int z = -WorldSize / 2; z < WorldSize / 2; z++)
             {
-                for (int x = 0; x < WorldSize; x++)
+                for (int x = -WorldSize / 2; x < WorldSize / 2; x++)
                 {
-                    chunks[x, z] = new Chunk(new Vector2i(x, z));
+                    chunks[x + WorldSize / 2, z + WorldSize / 2] = new Chunk(new Vector2i(x, z));
                 }
             }
         }

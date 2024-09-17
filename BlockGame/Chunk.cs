@@ -36,9 +36,6 @@ namespace BlockGame
                 for (int x = 0; x < ChunkSize; x++)
                     for (int y = 0; y < (Heights[x, z] / 10); y++)
                     {
-                        if (y >= 15)
-                            Blocks[x, y, z] = BlockGame.Blocks.Blocks.Dirt;
-                        else
                             Blocks[x, y, z] = BlockGame.Blocks.Blocks.Stone;
                     }
 
@@ -47,7 +44,7 @@ namespace BlockGame
                 for (int x = 0; x < ChunkSize; x++)
                     for (int y = 0; y < (Heights[x, z] / 10); y++)
                     {
-                        if (Blocks[x, y, z] == BlockGame.Blocks.Blocks.Dirt && ( y+1> ChunkHeight || Blocks[x, y+1, z] == null))
+                        if (( y+1> ChunkHeight || Blocks[x, y+1, z] == null))
                             Blocks[x, y, z] = BlockGame.Blocks.Blocks.Grass;
                     }
         }
@@ -111,7 +108,7 @@ namespace BlockGame
         public void AddFace(Block block, Faces face, Vector3 Pos)
         {
             Vector2i CHUNK_POS = (ChunkPos * ChunkSize);
-            ChunkVertices.AddRange(block.GetFace(face).vertices.Select(v => new TexturedVertex(v.Position + Pos + new Vector3(CHUNK_POS.X, 0, CHUNK_POS.Y), v.UV)));
+            ChunkVertices.AddRange(block.GetFace(face).vertices.Select(v => new TexturedVertex(v.Position + Pos + new Vector3(CHUNK_POS.X, 0, CHUNK_POS.Y), v.UV).SetColorM(v.ColorMult)));
             ChunkIndices.Add(new Vector3i(ChunkVertices.Count - 4, ChunkVertices.Count - 3, ChunkVertices.Count - 2));
             ChunkIndices.Add(new Vector3i(ChunkVertices.Count - 2, ChunkVertices.Count - 1, ChunkVertices.Count - 4));
         }

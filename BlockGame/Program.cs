@@ -47,7 +47,7 @@ namespace BlockGame
         {
             Shader = new Shader("Shaders/Shader.vert", "Shaders/Shader.frag", ActionContex);
 
-            TextureAtlas.Generate(new Vector2i(128, 128));
+            TextureAtlas.Generate(new Vector2i(16, 16));
 
             Chunk.BlockRenderer = new BlockRenderer();
 

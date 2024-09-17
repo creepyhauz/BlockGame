@@ -17,7 +17,7 @@ namespace BlockGame.Textures
 
         public static Vector2i TextureSize => textureSize; public static void Generate(Vector2i size)
         {
-            _atlas = Texture.LoadFromFile("Textures/atlas.png"); //Временно использую старый атлас из Minecraft.
+            _atlas = Texture.LoadFromFile("Textures/terrain.png"); //Временно использую старый атлас из Minecraft.
             textureSize = size;
             // TODO
         }
