@@ -28,7 +28,7 @@ namespace BlockGame
         }
 
 
-        public void Render(Shader shader, Camera camera)
+        public void Render(Shader shader, Player camera)
         {
             for (int z = 0; z < WorldSize; z++)
             {
