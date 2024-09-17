@@ -18,7 +18,7 @@ namespace BlockGame
 
         OpenGLActionContex ActionContex = new OpenGLActionContex();
 
-        public Camera Camera { get; } = new Camera();
+        public Player Camera { get; } = new Player();
 
         GameWindow GameWindow { get; }
 
@@ -27,7 +27,7 @@ namespace BlockGame
         public Program()
         {
             GameWindow = new GameWindow(new GameWindowSettings(), new NativeWindowSettings() { WindowState = WindowState.Maximized });
-            GameWindow.UpdateFrequency = 60;
+            //GameWindow.UpdateFrequency = 60;
             GameWindow.UpdateFrame += Game_UpdateFrame;
             GameWindow.RenderFrame += Game_RenderFrame;
             GameWindow.Load += Game_Load;
@@ -47,7 +47,7 @@ namespace BlockGame
         {
             Shader = new Shader("Shaders/Shader.vert", "Shaders/Shader.frag", ActionContex);
 
-            TextureAtlas.Generate(new Vector2i(128, 128));
+            TextureAtlas.Generate(new Vector2i(16, 16));
 
             Chunk.BlockRenderer = new BlockRenderer();
 
@@ -57,9 +57,9 @@ namespace BlockGame
             world = new World();
 
             GL.Enable(EnableCap.DepthTest);
-            GL.FrontFace(FrontFaceDirection.Cw);
-            GL.Enable(EnableCap.CullFace);
-            GL.CullFace(CullFaceMode.Back);
+            //GL.FrontFace(FrontFaceDirection.Cw);
+            //GL.Enable(EnableCap.CullFace);
+            //GL.CullFace(CullFaceMode.Back);
         }
         Matrix4 DrawTransform;
         float i = 0;

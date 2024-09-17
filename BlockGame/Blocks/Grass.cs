@@ -17,7 +17,7 @@ namespace BlockGame.Blocks
 
         public override FaceData GetFace(Faces face)
         {
-            List<Vector2> UVTop = TextureAtlas.GetAtlasUV(7, 13);
+            List<Vector2> UVTop = TextureAtlas.GetAtlasUV(8, 13);
             List<Vector2> UVBottom = TextureAtlas.GetAtlasUV(2, 15);
             List<Vector2> UVSide = TextureAtlas.GetAtlasUV(3, 15);
             switch (face)

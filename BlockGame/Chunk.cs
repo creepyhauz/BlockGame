@@ -34,7 +34,7 @@ namespace BlockGame
 
             for (int z = 0; z < ChunkSize; z++)
                 for (int x = 0; x < ChunkSize; x++)
-                    for (int y = 0; y < (Heights[x, z] / 10); y++)
+                    for (int y = 0; y < (Heights[x, z]/10); y++)
                     {
                         if (y >= 15)
                             Blocks[x, y, z] = BlockGame.Blocks.Blocks.Dirt;
@@ -50,6 +50,8 @@ namespace BlockGame
                         if (Blocks[x, y, z] == BlockGame.Blocks.Blocks.Dirt && ( y+1> ChunkHeight || Blocks[x, y+1, z] == null))
                             Blocks[x, y, z] = BlockGame.Blocks.Blocks.Grass;
                     }
+
+            Blocks[0, 0, 0] = BlockGame.Blocks.Blocks.DownDoor;
         }
 
         List<TexturedVertex> ChunkVertices = new List<TexturedVertex>();
@@ -116,7 +118,7 @@ namespace BlockGame
             ChunkIndices.Add(new Vector3i(ChunkVertices.Count - 2, ChunkVertices.Count - 1, ChunkVertices.Count - 4));
         }
 
-        public void Render(Shader shader, Camera camera)
+        public void Render(Shader shader, Player camera)
         {
             TextureAtlas.Atlas.Use(0);
             shader.SetMatrix4("aTransform", camera.CameraTransform);
